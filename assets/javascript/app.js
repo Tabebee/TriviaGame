@@ -31,9 +31,10 @@ var images = [  "<img src='assets/images/1Answer.jpg' class='center-block'>", "<
                 "<img src='assets/images/5Answer.jpg' class='center-block'>", "<img src='assets/images/6Answer.jpg' class='center-block'>",
                 "<img src='assets/images/7Answer.jpg' class='center-block'>", "<img src='assets/images/8Answer.jpg' class='center-block'>",
                 "<img src='assets/images/9Answer.jpg' class='center-block'>", "<img src='assets/images/10Answer.png' class='center-block'>"];
+// $(images).addClass('center-block');
 
 var wrongIMG = ["<img src='assets/images/wrong.png' class='center-block'>"];
-// $("img").addClass('center-block');
+var timeoutimg =  ["<img src='assets/images/timeout.jpg' class='center-block'>"];
 
 var start;
 var game;
@@ -43,15 +44,17 @@ var clock;
 var correct = 0;
 var wrong = 0;
 var wrongTimeout = 0;
-var clickSound = new Audio("assets/javascript/Click.mp3");
+var clickSound = new Audio("assets/javascript/Click.mp3"); // Click
 var correctSound = new Audio("assets/javascript/Right.mp3");   // Correct audio
-var wrongSound = new Audio("assets/javascript/Wrong.mp3");   // Evil Laugh
+var wrongSound = new Audio("assets/javascript/Wrong.mp3");   //  Laugh
+var timeoutSound = new Audio("assets/javascript/whawha.mp3");  //wha wha wha
+var song = new Audio("assets/javascript/Jackson5IWantYouBack.mp3"); //I want you back
 
 
 
 $(document).ready(function() {
 
-    alert("TURN UP YO VOLUME!");
+    // alert("TURN UP YO VOLUME!");
 
     function firstpg() {
         start = "<p class='text-center main-button-container'><a class='btn btn-success btn-lg btn-block start-button' href='#' role='button'>Start Quiz</a></p>";
@@ -73,13 +76,10 @@ $(document).ready(function() {
         clickSound.play();
         selectedAnswer = $(this).text();
         if(selectedAnswer === correctAnswers[QCount]) {
-            //alert("correct");
-
             clearInterval(clock);
             ifWin();
         }
         else {
-            //alert("wrong answer!");
             clearInterval(clock);
             ifLoss();
         }
@@ -94,14 +94,18 @@ $(document).ready(function() {
 
 function timeoutLoss() {
     wrongTimeout++;
-    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>You ran out of time!  The correct answer was: " + correctAnswers[QCount] + "</p>" + "<img class='center-block img-wrong' src='img/x.png'>";
+    game =  "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" +
+            "<p class='text-center'>You ran out of time!  The correct answer was: " + correctAnswers[QCount] + "</p>" +
+            timeoutimg;
     $(".mainArea").html(game);
     setTimeout(wait, 4000);
+    timeoutSound.play();
 }
 
 function ifWin() {
     correct++;
-    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>Correct! The answer is: " + correctAnswers[QCount] + "</p>" + images[QCount];  // + imageArray[QCount]
+    game =  "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" +
+            "<p class='text-center'>Correct! The answer is: " + correctAnswers[QCount] + "</p>" + images[QCount];
     $(".mainArea").html(game);
     setTimeout(wait, 4000);
     correctSound.play();
@@ -109,14 +113,18 @@ function ifWin() {
 
 function ifLoss() {
     wrong++;
-    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>Wrong! The correct answer is: "+ correctAnswers[QCount] + "</p>" + wrongIMG;
+    game =  "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" +
+            "<p class='text-center'>Wrong! The correct answer is: "+ correctAnswers[QCount] + "</p>" + wrongIMG;
     $(".mainArea").html(game);
     setTimeout(wait, 4000);
     wrongSound.play();
 }
 
 function createHTML() {
-    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>10</span></p><p class='text-center'>" + questionArray[QCount] + "</p><p class='first-answer answer'>A. " + answerArray[QCount][0] + "</p><p class='answer'>B. "+answerArray[QCount][1]+"</p><p class='answer'>C. "+answerArray[QCount][2]+"</p><p class='answer'>D. "+answerArray[QCount][3]+"</p>";
+    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>10</span></p><p class='text-center'>" +
+            questionArray[QCount] + "</p><p class='first-answer answer'>A. " + answerArray[QCount][0] +
+            "</p><p class='answer'>B. "+ answerArray[QCount][1] + "</p><p class='answer'>C. " + answerArray[QCount][2] +
+            "</p><p class='answer'>D. "+ answerArray[QCount][3] + "</p>";
     $(".mainArea").html(game);
 }
 
@@ -147,8 +155,12 @@ function timerfunc() {
 }
 
 function lastpg() {
-    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>All done, here's how you did!" + "</p>" + "<p class='summary-correct'>Correct Answers: " + correct + "</p>" + "<p>Wrong Answers: " + wrong + "</p>" + "<p>Unanswered: " + wrongTimeout + "</p>" + "<p class='text-center reset-button-container'><a class='btn btn-primary btn-lg btn-block reset-button' href='#' role='button'>Reset The Quiz!</a></p>";
+    game =  "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" +
+            "<p class='text-center'>All done, here's how you did!" + "</p>" + "<p class='summary-correct'>Correct Answers: " +
+            correct + "</p>" + "<p>Wrong Answers: " + wrong + "</p>" + "<p>Unanswered: " + wrongTimeout + "</p>" +
+            "<p class='text-center reset-button-container'><a class='btn btn-primary btn-lg btn-block reset-button' href='#' role='button'>Reset The Quiz!</a></p>";
     $(".mainArea").html(game);
+    song.play();
 }
 
 function reset() {
@@ -159,4 +171,7 @@ function reset() {
     timer = 10;
     createHTML();
     timerfunc();
+    song.stop();
 }
+
+alert("TURN UP YO VOLUME!");

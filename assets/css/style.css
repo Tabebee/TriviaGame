@@ -1,6 +1,6 @@
 
 body {
-    color: white;
+    color: rgb(97, 96, 111);
 }
 
 .jumbotron {
@@ -9,6 +9,7 @@ body {
     width: 80%;
     margin-left: 10%;
     margin-right: 10%;
+    border: 5px solid #5e7f7e;
 }
 
 .main-button-container {
@@ -20,7 +21,7 @@ body {
     padding: 7px 10px;
     height: 150%;
     color: black;
-    background-color: #666666;
+    background-color: #5e7f7e;
     border-radius: 10px;
 }
 

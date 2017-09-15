@@ -31,109 +31,113 @@ var images = [  "<img src='assets/images/1Answer.jpg' class='center-block'>", "<
                 "<img src='assets/images/5Answer.jpg' class='center-block'>", "<img src='assets/images/6Answer.jpg' class='center-block'>",
                 "<img src='assets/images/7Answer.jpg' class='center-block'>", "<img src='assets/images/8Answer.jpg' class='center-block'>",
                 "<img src='assets/images/9Answer.jpg' class='center-block'>", "<img src='assets/images/10Answer.png' class='center-block'>"];
+
+var wrongIMG = ["<img src='assets/images/wrong.png' class='center-block'>"];
 // $("img").addClass('center-block');
 
 var start;
 var game;
-var timer = 99;
-var questionCounter = 0;
+var timer = 10;
+var QCount = 0;
 var clock;
 var correct = 0;
 var wrong = 0;
 var wrongTimeout = 0;
-var sound1 = new Audio("assets/javascript/Click.mp3");
-var sound2 = new Audio("assets/javascript/Right.mp3");   // Correct audio
-var sound3 = new Audio("assets/javascript/Wrong.mp3");   // Evil Laugh
+var clickSound = new Audio("assets/javascript/Click.mp3");
+var correctSound = new Audio("assets/javascript/Right.mp3");   // Correct audio
+var wrongSound = new Audio("assets/javascript/Wrong.mp3");   // Evil Laugh
 
 
 
 $(document).ready(function() {
 
-    function initialScreen() {
+    alert("TURN UP YO VOLUME!");
+
+    function firstpg() {
         start = "<p class='text-center main-button-container'><a class='btn btn-success btn-lg btn-block start-button' href='#' role='button'>Start Quiz</a></p>";
         $(".mainArea").html(start);
     }
 
-    initialScreen();
+    firstpg();
     
     $("body").on("click", ".start-button", function(event){
         event.preventDefault(); 
-        sound1.play();
-        generateHTML();
+        clickSound.play();
+        createHTML();
 
-        timerWrapper();
+        timerfunc();
 
     });
 
     $("body").on("click", ".answer", function(event){
-        sound1.play();
+        clickSound.play();
         selectedAnswer = $(this).text();
-        if(selectedAnswer === correctAnswers[questionCounter]) {
+        if(selectedAnswer === correctAnswers[QCount]) {
             //alert("correct");
 
             clearInterval(clock);
-            generateWin();
+            ifWin();
         }
         else {
             //alert("wrong answer!");
             clearInterval(clock);
-            generateLoss();
+            ifLoss();
         }
     });
 
     $("body").on("click", ".reset-button", function(event){
-        sound1.play();
-        resetGame();
+        clickSound.play();
+        reset();
     });
 
 });
 
-function generateLossDueToTimeOut() {
+function timeoutLoss() {
     wrongTimeout++;
-    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>You ran out of time!  The correct answer was: " + correctAnswers[questionCounter] + "</p>" + "<img class='center-block img-wrong' src='img/x.png'>";
+    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>You ran out of time!  The correct answer was: " + correctAnswers[QCount] + "</p>" + "<img class='center-block img-wrong' src='img/x.png'>";
     $(".mainArea").html(game);
     setTimeout(wait, 4000);
 }
 
-function generateWin() {
+function ifWin() {
     correct++;
-    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>Correct! The answer is: " + correctAnswers[questionCounter] + "</p>" + images[questionCounter];  // + imageArray[questionCounter]
+    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>Correct! The answer is: " + correctAnswers[QCount] + "</p>" + images[QCount];  // + imageArray[QCount]
     $(".mainArea").html(game);
     setTimeout(wait, 4000);
-    sound2.play();
+    correctSound.play();
 }
 
-function generateLoss() {
+function ifLoss() {
     wrong++;
-    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>Wrong! The correct answer is: "+ correctAnswers[questionCounter] + "</p>" + "<img class='center-block img-wrong' src='img/x.png'>";
+    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>Wrong! The correct answer is: "+ correctAnswers[QCount] + "</p>" + wrongIMG;
     $(".mainArea").html(game);
     setTimeout(wait, 4000);
-    sound3.play();
+    wrongSound.play();
 }
 
-function generateHTML() {
-    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>99</span></p><p class='text-center'>" + questionArray[questionCounter] + "</p><p class='first-answer answer'>A. " + answerArray[questionCounter][0] + "</p><p class='answer'>B. "+answerArray[questionCounter][1]+"</p><p class='answer'>C. "+answerArray[questionCounter][2]+"</p><p class='answer'>D. "+answerArray[questionCounter][3]+"</p>";
+function createHTML() {
+    game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>10</span></p><p class='text-center'>" + questionArray[QCount] + "</p><p class='first-answer answer'>A. " + answerArray[QCount][0] + "</p><p class='answer'>B. "+answerArray[QCount][1]+"</p><p class='answer'>C. "+answerArray[QCount][2]+"</p><p class='answer'>D. "+answerArray[QCount][3]+"</p>";
     $(".mainArea").html(game);
 }
 
 function wait() {
-    if (questionCounter < 9) {
-        questionCounter++;
-        generateHTML();
-        timer = 99;
-        timerWrapper();
+    if (QCount < 9) {
+        QCount++;
+        createHTML();
+        timer = 10;
+        timerfunc();
     }
     else {
-        finalScreen();
+        lastpg();
     }
 }
 
-function timerWrapper() {
+function timerfunc() {
     clock = setInterval(tenSeconds, 1000);
     function tenSeconds() {
         if (timer === 0) {
             clearInterval(clock);
-            generateLossDueToTimeOut();
+            timeoutLoss();
         }
         if (timer > 0) {
             timer--;
@@ -142,17 +146,17 @@ function timerWrapper() {
     }
 }
 
-function finalScreen() {
+function lastpg() {
     game = "<p class='text-center timer-p'>Time Remaining: <span class='timer'>" + timer + "</span></p>" + "<p class='text-center'>All done, here's how you did!" + "</p>" + "<p class='summary-correct'>Correct Answers: " + correct + "</p>" + "<p>Wrong Answers: " + wrong + "</p>" + "<p>Unanswered: " + wrongTimeout + "</p>" + "<p class='text-center reset-button-container'><a class='btn btn-primary btn-lg btn-block reset-button' href='#' role='button'>Reset The Quiz!</a></p>";
     $(".mainArea").html(game);
 }
 
-function resetGame() {
-    questionCounter = 0;
+function reset() {
+    QCount = 0;
     correct = 0;
     wrong = 0;
     wrongTimeout = 0;
-    timer = 99;
-    generateHTML();
-    timerWrapper();
+    timer = 10;
+    createHTML();
+    timerfunc();
 }

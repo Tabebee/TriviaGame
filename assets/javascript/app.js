@@ -171,7 +171,9 @@ function reset() {
     timer = 10;
     createHTML();
     timerfunc();
-    song.stop();
+    song.pause();
 }
+
+
 
 alert("TURN UP YO VOLUME!");
